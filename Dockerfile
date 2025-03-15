@@ -5,6 +5,8 @@ RUN apk add --no-cache sudo curl wget bash zsh openssh-client unzip tar gzip vim
 
 # Crear usuario `dev` con permisos de sudo
 ARG USERNAME
+ARG NAME
+ARG EMAIL
 RUN adduser -D -h /home/$USERNAME -s /bin/zsh $USERNAME \
     && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
@@ -16,6 +18,6 @@ USER $USERNAME
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # Git configuration
-RUN git config --global user.name "Jesus Fernandez"
-RUN git config --global user.email "jesus@jesusfernandez.me"
+RUN git config --global user.name $NAME
+RUN git config --global user.email $EMAIL
 RUN git config --global init.defaultBranch main
