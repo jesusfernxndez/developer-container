@@ -1,21 +1,20 @@
-FROM ubuntu
+FROM alpine
 
-RUN apt-get update && apt-get install -y curl wget zsh openssh-client vim git
+RUN apk update \
+    && apk add --no-cache \
+    && sudo bash zsh curl wget openssh-client vim nano git
 
 ARG USERNAME
 ARG NAME
 ARG EMAIL
-RUN adduser --disabled-password --gecos "" $USERNAME \
-    && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
 
-USER $USERNAME
-WORKDIR /home/$USERNAME
+RUN sed -i "s|/bin/sh|$(which zsh)|" /etc/passwd
+RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes
 
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+COPY .zshrc /root/.zshrc
 
 RUN git config --global user.name "$NAME" \
     && git config --global user.email "$EMAIL" \
     && git config --global init.defaultBranch main
 
-USER root
+CMD [ "zsh" ]
