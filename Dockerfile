@@ -1,19 +1,23 @@
-FROM alpine
+FROM ubuntu
 
-RUN apk update \
-    && apk add --no-cache sudo bash zsh curl wget openssh-client vim nano git
+RUN apt-get update && apt-get install -y \
+    sudo zsh curl wget unzip git vim nano \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ARG USERNAME
 ARG NAME
 ARG EMAIL
 
-RUN sed -i "s|/bin/sh|$(which zsh)|" /etc/passwd
-RUN curl -sS https://starship.rs/install.sh | sh -s -- --yes
+RUN usermod -aG sudo ubuntu \
+    && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
+    && chsh -s $(which zsh) ubuntu
 
-COPY .zshrc /root/.zshrc
+USER ubuntu
+RUN curl -sS https://starship.rs/install.sh | sudo sh -s -- -y
+COPY .zshrc /home/ubuntu/.zshrc
 
 RUN git config --global user.name "$NAME" \
     && git config --global user.email "$EMAIL" \
     && git config --global init.defaultBranch main
 
-CMD [ "zsh" ]
+USER root
