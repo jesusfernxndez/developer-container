@@ -1,8 +1,7 @@
 FROM alpine
 
 RUN apk update \
-    && apk add --no-cache \
-    && sudo bash zsh curl wget openssh-client vim nano git
+    && apk add --no-cache sudo bash zsh curl wget openssh-client vim nano git
 
 ARG USERNAME
 ARG NAME
