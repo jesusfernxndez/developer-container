@@ -21,3 +21,5 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 RUN git config --global user.name $NAME
 RUN git config --global user.email $EMAIL
 RUN git config --global init.defaultBranch main
+
+USER root
