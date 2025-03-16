@@ -1,25 +1,21 @@
-FROM alpine
+FROM ubuntu
 
-# Instalar herramientas básicas de desarrollo
-RUN apk add --no-cache sudo curl wget bash zsh openssh-client unzip tar gzip vim nano git
+RUN apt-get update && apt-get install -y curl wget zsh openssh-client vim git
 
-# Crear usuario `dev` con permisos de sudo
 ARG USERNAME
 ARG NAME
 ARG EMAIL
-RUN adduser -D -h /home/$USERNAME -s /bin/zsh $USERNAME \
+RUN adduser --disabled-password --gecos "" $USERNAME \
     && echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
-# Cambiar al usuario `dev`
 USER $USERNAME
+WORKDIR /home/$USERNAME
 
-# Instalar Oh My Zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-# Git configuration
-RUN git config --global user.name $NAME
-RUN git config --global user.email $EMAIL
-RUN git config --global init.defaultBranch main
+RUN git config --global user.name "$NAME" \
+    && git config --global user.email "$EMAIL" \
+    && git config --global init.defaultBranch main
 
 USER root
