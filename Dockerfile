@@ -14,7 +14,7 @@ RUN usermod -aG sudo ubuntu \
 
 USER ubuntu
 RUN curl -sS https://starship.rs/install.sh | sudo sh -s -- -y
-COPY .zshrc /home/ubuntu/.zshrc
+COPY .zshrc /home/ubuntu/.zshrc && chown ubuntu:ubuntu /home/ubuntu/.zshrc
 
 RUN git config --global user.name "$NAME" \
     && git config --global user.email "$EMAIL" \
