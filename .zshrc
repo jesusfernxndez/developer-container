@@ -1,6 +1,10 @@
-# Load starship
-eval "$(starship init zsh)"
+if [ -z "$SHELL" ]; then
+    SHELL=$(which zsh)
+fi
 
-# Load zinit
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-source "${ZINIT_HOME}/zinit.zsh"
+if [ -f "$HOME/.local/share/zinit/zinit.git/zinit.zsh" ]; then
+    ZINIT_HOME="$HOME/.local/share/zinit/zinit.git"
+    source "$ZINIT_HOME/zinit.zsh"
+fi
+
+eval "$(starship init zsh)"

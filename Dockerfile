@@ -1,21 +1,18 @@
-FROM ubuntu
-
-RUN apt-get update && apt-get install -y \
-    sudo zsh curl wget unzip git vim nano \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+FROM alpine
 
 ARG USERNAME
 ARG NAME
 ARG EMAIL
 
-RUN userdel -r ubuntu || true && groupdel ubuntu || true && chsh -s /usr/bin/zsh
+WORKDIR /root
 
-RUN curl -sS https://starship.rs/install.sh | sudo sh -s -- -y
-RUN mkdir -p /root/.local/share/zinit \
-    && git clone https://github.com/zdharma-continuum/zinit.git /root/.local/share/zinit/zinit.git
-
-COPY .zshrc /root/.zshrc 
-
+RUN apk add --no-cache zsh curl unzip git vim
+COPY setup.sh .
+RUN ./setup.sh
+COPY .zshrc .
+RUN git --version
 RUN git config --global user.name "$NAME" \
     && git config --global user.email "$EMAIL" \
     && git config --global init.defaultBranch main
+
+CMD ["/bin/zsh"]
