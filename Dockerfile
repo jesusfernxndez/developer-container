@@ -8,7 +8,7 @@ ARG USERNAME
 ARG NAME
 ARG EMAIL
 
-RUN userdel -r ubuntu || true && groupdel ubuntu || true
+RUN userdel -r ubuntu || true && groupdel ubuntu || true && chsh -s /usr/bin/zsh
 
 RUN curl -sS https://starship.rs/install.sh | sudo sh -s -- -y
 RUN mkdir -p /root/.local/share/zinit \
