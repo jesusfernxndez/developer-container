@@ -8,17 +8,15 @@ ARG USERNAME
 ARG NAME
 ARG EMAIL
 
-RUN usermod -aG sudo ubuntu \
-    && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ubuntu \
-    && chsh -s $(which zsh) ubuntu
+RUN userdel -r ubuntu || true && groupdel ubuntu || true
 
-USER ubuntu
 RUN curl -sS https://starship.rs/install.sh | sudo sh -s -- -y
-COPY .zshrc /home/ubuntu/.zshrc 
-RUN sudo chown ubuntu:ubuntu /home/ubuntu/.zshrc
+COPY .zshrc /root/.zshrc 
 
 RUN git config --global user.name "$NAME" \
     && git config --global user.email "$EMAIL" \
     && git config --global init.defaultBranch main
 
 USER root
+
+CMD ["zsh"]
