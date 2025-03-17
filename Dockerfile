@@ -11,6 +11,9 @@ ARG EMAIL
 RUN userdel -r ubuntu || true && groupdel ubuntu || true && chsh -s /usr/bin/zsh
 
 RUN curl -sS https://starship.rs/install.sh | sudo sh -s -- -y
+RUN mkdir -p /root/.local/share/zinit \
+    && git clone https://github.com/zdharma-continuum/zinit.git /root/.local/share/zinit/zinit.git
+
 COPY .zshrc /root/.zshrc 
 
 RUN git config --global user.name "$NAME" \
